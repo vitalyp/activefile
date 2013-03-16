@@ -1,3 +1,7 @@
+== Gem under construction. Base functionality already done, but I still need reorganize it.
+
+Please, be patient! All work will be done untill May.
+
 == Welcome to ActiveFile
 
 ActiveFile is a lightweight file system ORM.
