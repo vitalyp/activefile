@@ -1,5 +1,32 @@
-== Welcome to ActiveFile
+# ActiveFile (Gem under construction)
+[![Gem Version](https://badge.fury.io/rb/activefile.png)](http://badge.fury.io/rb/activefile)
 
 ActiveFile is a lightweight file system ORM.
 
 Build a persistent domain model by mapping file system objects to Ruby classes. It inherits ActiveRecord-similar interface.
+
+
+
+class Shop < ActiveFile::Base
+  parent_to :product
+end
+
+class Product < ActiveFile::Base
+  child_of :shop
+end
+
+shop = Shop.new(:name => "Apple Store")
+shop.save!
+
+Shop.all.size  #> 1
+
+iPad = Product.new(:name => "iPad", :parent => shop, :data => "The iPad is a line of tablet computers designed and marketed by Apple Inc., which runs Apple's iOS operating system.") 
+iPad.save!
+
+product = Product.where(:name => "iPad")[0]
+product.data  #>  "The iPad "...
+product.shop  #>  <Shop instance>
+product.shop.name  #> "Apple Store"
+
+
+# In result, two persistent files were created, accessible via ORM mechanism. 

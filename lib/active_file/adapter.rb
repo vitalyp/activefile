@@ -1,86 +1,18 @@
-#--
-# Copyright (c) 2004-2013 David Heinemeier Hansson
-#
-# Permission is hereby granted, free of charge, to any person obtaining
-# a copy of this software and associated documentation files (the
-# "Software"), to deal in the Software without restriction, including
-# without limitation the rights to use, copy, modify, merge, publish,
-# distribute, sublicense, and/or sell copies of the Software, and to
-# permit persons to whom the Software is furnished to do so, subject to
-# the following conditions:
-#
-# The above copyright notice and this permission notice shall be
-# included in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-#++
-
-require 'fileutils'
-
 module ActiveFile
-
-  module SourceType
-    UNDEFINED = 0
-    LAYOUT = 1
-    CONTENT = 2
-    CSS = 3
-    SEO = 4
-    IMAGE = 6
-    COMPILED = 7
-  end
-
+  # Data Source Storage Adapter
   module Adapter
-
-    SOURCE_FOLDER = "data_source"
-    SOURCE_FOLDERS = {
-      SourceType::CSS       => "app/assets/stylesheets/custom/",
-      SourceType::IMAGE     => "public/img/storage/",
-      SourceType::LAYOUT    => "#{SOURCE_FOLDER}/layouts/",
-      SourceType::CONTENT   => "#{SOURCE_FOLDER}/contents/",
-      SourceType::SEO       => "#{SOURCE_FOLDER}/seotags/",
-      SourceType::UNDEFINED => "#{SOURCE_FOLDER}/others/",
-      SourceType::COMPILED => "#{SOURCE_FOLDER}/compiled/",
-    }
-    TEST_SOURCE_FOLDER = "data_source_test"
-    TEST_SOURCE_FOLDERS = {
-      SourceType::CSS       => "app/assets/stylesheets/custom_test/",
-      SourceType::IMAGE     => "public/img/storage_test/",
-      SourceType::LAYOUT    => "#{TEST_SOURCE_FOLDER}/layouts/",
-      SourceType::CONTENT   => "#{TEST_SOURCE_FOLDER}/contents/",
-      SourceType::SEO       => "#{TEST_SOURCE_FOLDER}/seotags/",
-      SourceType::UNDEFINED => "#{TEST_SOURCE_FOLDER}/others/",
-      SourceType::COMPILED =>  "#{TEST_SOURCE_FOLDER}/compiled/"
-    }
-    SOURCE_TYPE_EXTENSIONS = {
-      SourceType::CSS       => "scss",
-      SourceType::IMAGE     => "*",       # * - file extension gets from the source file extension
-      SourceType::LAYOUT    => "",
-      SourceType::CONTENT   => "",
-      SourceType::SEO       => "",
-      SourceType::UNDEFINED => "",
-      SourceType::COMPILED => ""
-    }
-    # use it for file name decorations:
-    #       ID_PREFIX + type_integer + ID_DIVIDER + source_name       < for simple source
-    #       target_type_integer + TARGET_DIVIDER + target_name + extension         < for  attached sources
-    ID_PREFIX = 'pre'
-    ID_DIVIDER = '-id-'
-    TARGET_DIVIDER = '-tar-'
-    CUSTOM_SCSS_FOLDER = "custom/"
-    
-
+    require 'fileutils'
     RAISE_TRUE = true
     RAISE_FALSE = false
 
-    def initialize args
-      super args
+    #def initialize args
+    #  super args
+    #end
+
+    def base_folder arg
+      puts "BaseFolder is #{arg}"
     end
+
 
     # touch file to read!
     def load!
@@ -131,6 +63,7 @@ module ActiveFile
       get_source_folder + get_filename
     end
     def get_extension
+      return ".scss" if type == SourceType::CSS
       return extension.blank? ? "" : "."+extension
 
       type_ext = SOURCE_TYPE_EXTENSIONS[type.to_i] || ""
