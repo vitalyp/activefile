@@ -50,7 +50,7 @@ In result, two persistent files were created, accessible via ORM mechanism.
 
 Add this line to your application's Gemfile:
 
-    gem 'require_reloader'
+    gem 'activefile'
 
 And then execute:
 
