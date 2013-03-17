@@ -1,18 +1,17 @@
+require 'active_support/core_ext/object/blank'
+
 module ActiveFile
   # Data Source Storage Adapter
   module Adapter
     require 'fileutils'
     RAISE_TRUE = true
     RAISE_FALSE = false
+    BASE_FOLDER = 'activefiles'
 
-    #def initialize args
-    #  super args
-    #end
-
-    def base_folder arg
-      puts "BaseFolder is #{arg}"
+    def type
+      self.class.to_s.split("::")[1].downcase
+      #raise "type to be done #{self.class}"
     end
-
 
     # touch file to read!
     def load!
@@ -26,7 +25,7 @@ module ActiveFile
 
     def data
       if @self_data == nil
-        @self_data = File.read(self.get_source_path)
+        @self_data = ::File.read(self.get_source_path)
       end
       @self_data || ""
     end
@@ -50,7 +49,8 @@ module ActiveFile
     end
     # Get source filename
     def get_filename
-      get_name + get_extension
+      #get_name + get_extension
+      get_name
     end
     # Alias for get_source_path
     def get_filepath
@@ -101,7 +101,7 @@ module ActiveFile
       # later..
       old_file_path = get_source_path
       new_file_path = get_source_folder + new_file_name + get_extension
-      b_result = !!File.rename(old_file_path, new_file_path)
+      b_result = !!::File.rename(old_file_path, new_file_path)
       raise "Unable to rename source" unless b_result
       self.name = new_file_name
       if attach
@@ -114,20 +114,20 @@ module ActiveFile
       b_result
     end
     def new_record?
-      p get_source_path
-      !File.exists?(get_source_path)
+      !::File.exists?(get_source_path)
     end
   private
     def save_method(raise_exception_on_error)
-      File.open(get_source_path, "w") do
+      ::File.open(get_source_path, "w") do
         |file| file.write(data.force_encoding('utf-8'))
       end
+      true
     rescue => e
       return raise_exception_on_error == RAISE_TRUE ? raise(e) : false
     end
     def delete_method(raise_exception_on_error)
       delete_file_name = get_source_path
-      File.delete(delete_file_name)
+      ::File.delete(delete_file_name)
       return true
     rescue => e
       return raise_exception_on_error == RAISE_TRUE ? raise(e) : false
@@ -168,7 +168,7 @@ module ActiveFile
       end
 
       target =  Adapter.get_source_folder(target_type) + target_name + target_type_extension
-      return nil unless File.exists?(target)
+      return nil unless ::File.exists?(target)
       return Source.new({ :type => target_type.to_i, :name => target_name, :data => nil })
     end
     # Get attached object
@@ -195,19 +195,23 @@ module ActiveFile
     #
     # STATIC METHODS MODULE
     module ClassMethods
+      def base_folder arg
+        puts "BaseFolder is #{arg}"
+      end
       # Creates a new source instance and saves it to disk. Returns the newly created source. If a failure has occurred or source already exists -
       # an exception will be raised.
       def create(attributes={})
         raise ArgumentError, "expected an attributes Hash, got #{attributes.inspect}" unless attributes.is_a?(Hash)
         source_instance = Source.new(attributes)
-        raise 'Source file with such name already exists!' if File.exists?(source_instance.get_source_path)
+        raise 'Source file with such name already exists!' if ::File.exists?(source_instance.get_source_path)
         source_instance.save!
         return source_instance
       end
       # Get source folder for any source type. Create, if not exists.
       def get_source_folder(type)
-        source_folder = Rails.env == 'test' ? TEST_SOURCE_FOLDERS[type.to_i || SourceType::UNDEFINED] : SOURCE_FOLDERS[type.to_i || SourceType::UNDEFINED]
-        FileUtils.mkpath(source_folder) unless File.exists?(source_folder)
+        #source_folder = Rails.env == 'test' ? TEST_SOURCE_FOLDERS[type.to_i || SourceType::UNDEFINED] : SOURCE_FOLDERS[type.to_i || SourceType::UNDEFINED]
+        source_folder = "activefiles/" + type.to_s + "/"
+        FileUtils.mkpath(source_folder) unless ::File.exists?(source_folder)
         return source_folder
       end
       # Get names array of all sources with specified type

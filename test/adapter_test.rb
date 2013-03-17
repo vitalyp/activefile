@@ -1,27 +1,33 @@
-#++
-#gem 'minitest'
-#require 'minitest/unit'
-#--
-require 'minitest/autorun'
-#require './lib/active_file/adapter.rb'
-#require './lib/active_file/base.rb'
-#require './lib/activefile.rb'
+# gem install "minitest"
 
-TEST_FILES_FOLDER = "/testfiles"
+module ActiveFile
 
-class File < ActiveFile::Base
-  base_folder TEST_FILES_FOLDER
-end
+  require 'minitest/autorun'
+  require './lib/active_file/adapter.rb'
+  require './lib/active_file/base.rb'
+ 
+  TEST_FILES_FOLDER = "/testfiles" # TODO provide tests with separate folder
+                                   # TODO cleanup test folder before testing
 
-class AdapterTest < MiniTest::Unit::TestCase
-  def setup
-    @file = File.new
+  class File < ActiveFile::Base
   end
 
-  def test_new_object
-    assert_not_nil(@file)
-  end  
-  def test_folder_exists
-    assert_equal File.exists?(TEST_FILES_FOLDER), true
+  class AdapterTest < MiniTest::Unit::TestCase
+    def setup
+      @file = File.new
+    end
+
+    def test_on_save
+      assert_raises(ArgumentError) { @file.save! } # Name can not be blank:
+      @file.name = "testee"
+      assert_equal(true, @file.new_record?)
+      assert_equal(true, @file.save!)
+      assert_equal(false, @file.new_record?)
+      assert_equal(true, ::File.exists?(@file.get_source_path))
+      @file.data = "some data"
+      @file.save!
+    end
+
   end
+
 end
