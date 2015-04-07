@@ -2,7 +2,7 @@
 
 *   Initializing of plugin environment.
 
-    *Vitaly Pestov*
+    *Vitaly ARIEKDEV Pestov*
 
     Example of use:
 
