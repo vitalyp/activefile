@@ -4,6 +4,8 @@
 
     *Vitaly ARIEKDEV Pestov*
 
+	new colaborator added
+
     Example of use:
 
         gem install activefile
