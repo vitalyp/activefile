@@ -3,7 +3,6 @@
 *   Initializing of plugin environment.
 
     *Vitaly ARIEKDEV Pestov*
-
 	new colaborator added
 
     Example of use:
