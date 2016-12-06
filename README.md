@@ -6,6 +6,8 @@ ActiveFile is a lightweight file system ORM.
 
 Build a persistent domain model by mapping file system objects to Ruby classes. It inherits ActiveRecord-similar interface.
 
+Partically extracted from own [CMS implementation](https://github.com/softwareplanet/cms).
+
 ## Usage
 
 Define a `Shop` model. Inherit from `ActiveFile::Base`.
