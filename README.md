@@ -8,7 +8,8 @@ Build a persistent domain model by mapping file system objects to Ruby classes. 
 
 Partically extracted from own [CMS implementation](https://github.com/softwareplanet/cms).
 CMS Video Guide is [here](https://www.youtube.com/watch?v=AM9fd6P6aSs&index=4&list=PLxmXyf3makQAVmczoo3Xx06E2pkgoUxzP)
-!! All listed projects were developed in short terms, and were planned as a Minimal Viable Products!
+
+> All listed projects were developed in short terms, and were planned as a Minimal Viable Products!
 
 ## Usage
 
